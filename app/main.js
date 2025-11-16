@@ -13,8 +13,9 @@ rl.on('line', (input) => {
   const [command, ...args] = input.trim().split(' ')
   if(command in commands) {
     commands[command].action(args)
+  } else {
+    commands['notFound'].action(args, command)
   }
-  console.log(`${input}: command not found`)
   rl.prompt()
 })
 
