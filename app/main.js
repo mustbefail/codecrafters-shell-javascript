@@ -10,9 +10,11 @@ const rl = readline.createInterface({
 rl.prompt()
 
 rl.on('line', (input) => {
-  if(!commands.includes(input)) {
-    console.log(`${input}: command not found`)
+  const command = input.trim()
+  if(command in commands) {
+    commands[command].action()
   }
+  console.log(`${input}: command not found`)
   rl.prompt()
 })
 
