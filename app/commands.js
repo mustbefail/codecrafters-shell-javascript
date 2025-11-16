@@ -1,6 +1,6 @@
 const commands = {
   'exit': {
-    action: () => process.exit(0)
+    action: ([code]) => process.exit(code)
   }
 };
 
