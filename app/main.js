@@ -6,11 +6,11 @@ const rl = readline.createInterface({
   output: process.stdout,
 })
 
-rl.question('$ ', (answer) => {
-  if(!commands.includes(answer.trim())) {
-    console.log(`${answer}: command not found`)
-  }
-
-
-  rl.close()
-})
+while (true) {
+  rl.question('$ ', (answer) => {
+    if(!commands.includes(answer.trim())) {
+      console.log(`${answer}: command not found`)
+    }
+    rl.close()
+  })
+}
