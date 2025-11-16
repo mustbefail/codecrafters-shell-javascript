@@ -1,10 +1,16 @@
-const readline = require("readline");
+const readline = require('readline')
+const { commands } = require('./commands')
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-});
+})
 
-rl.question("$ ", (answer) => {
-  rl.close();
-});
+rl.question('$ ', (answer) => {
+  if(!commands.includes(answer.trim())) {
+    console.log(`${answer}: command not found`)
+  }
+
+
+  rl.close()
+})
