@@ -4,13 +4,15 @@ const { commands } = require('./commands')
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
+  prompt: '$ ',
 })
 
-while (true) {
-  rl.question('$ ', (answer) => {
-    if(!commands.includes(answer.trim())) {
-      console.log(`${answer}: command not found`)
-    }
-    rl.close()
-  })
-}
+rl.prompt()
+
+rl.on('line', (input) => {
+  if(!commands.includes(input)) {
+    console.log(`${input}: command not found`)
+  }
+  rl.prompt()
+})
+
