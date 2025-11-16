@@ -12,7 +12,7 @@ rl.prompt()
 rl.on('line', (input) => {
   const [command, ...args] = input.trim().split(' ')
   if(command in commands) {
-    commands[command].action(args)
+    commands[command].action(args, command)
   } else {
     commands['notFound'].action(args, command)
   }

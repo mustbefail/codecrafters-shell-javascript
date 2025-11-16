@@ -7,6 +7,9 @@
  * @type {Object.<string, { action: Function }>}
  */
 const commands = {
+  type: {
+    action: ([command]) => commands[command] ? console.log(`${command} is a shell builtin`) : console.log(`${command}: not found`)
+  },
   /**
    * Built‑in command that terminates the current process.
    *
@@ -15,7 +18,7 @@ const commands = {
    * @returns {never}
    */
   exit: {
-    action: ([code]) => process.exit(code)
+    action: ([code]) => process.exit(code ?? 0)
   },
 
   /**
