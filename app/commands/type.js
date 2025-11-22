@@ -12,7 +12,7 @@ async function type(args, commandSelfName, builtins) {
     `${command}${commandPath ? ` is ${commandPath}` : ` is a shell builtin` }`
   )
   else {
-    return console.log(`${command}: command not found`)
+    return console.log(`${command}: not found`)
   }
 }
 
