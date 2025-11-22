@@ -9,10 +9,10 @@ const rl = readline.createInterface({
 
 rl.prompt()
 
-rl.on('line', (input) => {
+rl.on('line', async (input) => {
   const [command, ...args] = input.trim().split(' ')
   if(command in commands) {
-    commands[command].action(args, command)
+    await commands[command].action(args, command)
   } else {
     commands['notFound'].action(args, command)
   }
