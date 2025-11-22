@@ -8,10 +8,13 @@ async function type(args, commandSelfName, builtins) {
   const pathParser = new ExecutableFinder(process.env.PATH)
   const commandPath = await pathParser.getCommandPath(command)
 
-  if(builtins.includes(command) || commandPath) return console.log(
-    `${command}${commandPath ? ` is ${commandPath}` : ` is a shell builtin` }`
+  if(builtins.includes(command)) {
+    return console.log(`${command}: is a shell builtin`)
+  } else if(commandPath) {
+    return console.log(
+    `${command} is ${commandPath}`
   )
-  else {
+  } else {
     return console.log(`${command}: not found`)
   }
 }
