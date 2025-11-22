@@ -1,4 +1,4 @@
-const { readdir  } = require('fs/promises')
+const { readdir, constants, access  } = require('fs/promises')
 
 class ExecutableFinder {
   #path
@@ -26,8 +26,14 @@ class ExecutableFinder {
     for await (const dir of path) {
       const files = await this._readDir(dir)
       if(!files) continue
-      const executablePath = files.find((file) => file.split('.')[0] === command)
-      if(executablePath) return `${dir}/${executablePath}`
+
+      const executable = files.find((file) => file === command)
+
+      try {
+        await access(`${dir}/${executable}`, constants.X_OK)
+        return `${dir}/${executable}`
+      } catch (e) {
+      }
     }
   }
 }
