@@ -9,7 +9,7 @@ async function type(args, commandSelfName, builtins) {
   const commandPath = await pathParser.getCommandPath(command)
 
   if(builtins.includes(command)) {
-    return console.log(`${command}: is a shell builtin`)
+    return console.log(`${command} is a shell builtin`)
   } else if(commandPath) {
     return console.log(
     `${command} is ${commandPath}`
