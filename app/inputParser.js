@@ -1,6 +1,8 @@
 class InputParser {
+  #tokenRegex = /"([^"]*)"|'([^']*)'|(\S+)/g
+
   parse(input) {
-    const [command, ...args] = input.trim().split(' ')
+    const [command, ...args] = input.match(this.#tokenRegex)
     return {command, args}
   }
 }

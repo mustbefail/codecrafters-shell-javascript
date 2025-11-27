@@ -31,7 +31,6 @@ class CommandExecutor {
       handler.execute(args)
     } else {
       const execPath = this.#getExecutablePath(command)
-      console.log(args, 'args')
       return execPath ? this.#runExternal(execPath, args)
         : this.#notFoundHandler(command)
     }
