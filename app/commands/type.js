@@ -1,22 +1,19 @@
-const ExecutableFinder = require('./executableFinder')
+const type = Object.freeze({
+  name: 'type',
+ factory: (ctx) => ({
+    async execute([command]) {
+      if (!command) {
+        return console.log('type: missing operand')
+      }
+      if (ctx.registry.has(command)) {
+        console.log(`${command} is a shell builtin`)
+      } else {
+        const path = await ctx.executableFinder.getCommandPath(command)
+        path ? console.log(`${command} is ${path}`)
+             : console.log(`${command}: not found`)
+      }
+    }
+  })
+})
 
-async function type(args, commandSelfName, builtins) {
-  const command = args[0]
-  if(!command) {
-    return console.log(`type: ${commandSelfName}: missing operand`)
-  }
-  const pathParser = new ExecutableFinder(process.env.PATH)
-  const commandPath = await pathParser.getCommandPath(command)
-
-  if(builtins.includes(command)) {
-    return console.log(`${command} is a shell builtin`)
-  } else if(commandPath) {
-    return console.log(
-    `${command} is ${commandPath}`
-  )
-  } else {
-    return console.log(`${command}: not found`)
-  }
-}
-
-module.exports.type = type
+module.exports = type

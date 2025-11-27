@@ -2,18 +2,19 @@ const { readdir, constants, access  } = require('fs/promises')
 
 class ExecutableFinder {
   #path
-  #currentOs = process.env.OS
+  #currentOs
   #pathSeparator = this.#currentOs === 'Windows_NT' ? ';' : ':'
 
-  constructor(path) {
+  constructor(path, os = process.env.OS) {
     this.#path = path
+    this.#currentOs = os
   }
 
-  _parsePath() {
+  #parsePath() {
     return this.#path.split(this.#pathSeparator)
   }
 
-  async _readDir(dirPath) {
+  async #readDir(dirPath) {
       try {
         return await readdir(dirPath)
       } catch (e) {
@@ -22,9 +23,9 @@ class ExecutableFinder {
   }
 
   async getCommandPath(command) {
-    const path = this._parsePath()
+    const path = this.#parsePath()
     for await (const dir of path) {
-      const files = await this._readDir(dir)
+      const files = await this.#readDir(dir)
       if(!files) continue
 
       const executable = files.find((file) => file === command)

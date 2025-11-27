@@ -1,21 +1,31 @@
 const readline = require('readline')
-const { commands } = require('./commands')
+const Shell = require('./shell')
+const CommandRegistry = require('./commandRegistry')
+const CommandExecutor = require('./commandExecutor')
+const ExecutableFinder = require('./executableFinder')
+const InputParser = require('./inputParser')
+const { loadCommands } = require('./commands')
 
+// Initialize dependencies
+const executableFinder = new ExecutableFinder(process.env.PATH)
+const inputParser = new InputParser()
+
+const registry = new CommandRegistry({ executableFinder })
+
+
+// Register commands
+const commands = loadCommands()
+registry.registerAll(commands)
+
+const executor = new CommandExecutor(registry, executableFinder)
+
+// Create and run a shell
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
   prompt: '$ ',
 })
 
-rl.prompt()
+const shell = new Shell(rl, inputParser, executor)
 
-rl.on('line', async (input) => {
-  const [command, ...args] = input.trim().split(' ')
-  if(command in commands) {
-    await commands[command].action(args, command)
-  } else {
-    commands['notFound'].action(args, command)
-  }
-  rl.prompt()
-})
-
+shell.start()
