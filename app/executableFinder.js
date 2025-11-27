@@ -39,14 +39,7 @@ class ExecutableFinder {
       fs.accessSync(filePath, fs.constants.X_OK)
       return true
     } catch {
-      if (process.platform !== 'win32') {
-        try {
-          fs.accessSync(filePath, fs.constants.F_OK)
-          return true
-        } catch {
-          return false
-        }
-      }
+      return false
     }
   }
 
