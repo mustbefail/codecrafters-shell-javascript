@@ -14,13 +14,13 @@ class ExecutableFinder {
   }
 
   #matchesCommand(fileName, command) {
-  if (process.platform === 'win32') {
-    const fileNameWithoutExt = path.basename(fileName, path.extname(fileName))
-    return fileNameWithoutExt.toLowerCase() === command.toLowerCase()
-  }
+    if (process.platform === 'win32') {
+      const fileNameWithoutExt = path.basename(fileName, path.extname(fileName))
+      return fileNameWithoutExt.toLowerCase() === command.toLowerCase()
+    }
 
-  return fileName === command
-}
+    return fileName === command
+  }
 
   #findExecutableInFiles(fileNames, command) {
     return fileNames.find(fileName => this.#matchesCommand(fileName, command))
@@ -39,11 +39,13 @@ class ExecutableFinder {
       fs.accessSync(filePath, fs.constants.X_OK)
       return true
     } catch {
-      try {
-        fs.accessSync(filePath, fs.constants.F_OK)
-        return true
-      } catch {
-        return false
+      if (process.platform !== 'win32') {
+        try {
+          fs.accessSync(filePath, fs.constants.F_OK)
+          return true
+        } catch {
+          return false
+        }
       }
     }
   }
@@ -52,7 +54,7 @@ class ExecutableFinder {
     const files = this.#readDir(dir)
     if (!files) return null
 
-    const executable = files.find(f => this.#matchesCommand(f, command))
+    const executable = this.#findExecutableInFiles(files, command)
     if (!executable) return null
 
     const fullPath = path.join(dir, executable)
