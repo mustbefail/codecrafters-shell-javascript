@@ -31,14 +31,14 @@ class CommandExecutor {
       handler.execute(args)
     } else {
       const execPath = this.#getExecutablePath(command)
-      return execPath ? this.#runExternal(execPath, args)
+      return execPath ? this.#runExternal(execPath, command, args)
         : this.#notFoundHandler(command)
     }
   }
 
-  #runExternal(execPath, args) {
+  #runExternal(execPath, command, args) {
     const childProcess = require('child_process')
-    return childProcess.spawnSync(execPath, args, {stdio: 'inherit'})
+    return childProcess.spawnSync(execPath, args, {stdio: 'inherit', argv0: command})
   }
 
 }
