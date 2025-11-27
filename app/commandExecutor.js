@@ -38,7 +38,10 @@ class CommandExecutor {
 
   #runExternal(execPath, command, args) {
     const childProcess = require('child_process')
-    return childProcess.spawnSync(execPath, args, {stdio: 'inherit', argv0: command})
+    return childProcess.spawnSync(command, args, {
+      stdio: 'inherit',
+      file: execPath
+    })
   }
 
 }
