@@ -13,10 +13,14 @@ class ExecutableFinder {
     return this.#path.split(this.#pathSeparator)
   }
 
-  #matchesCommand(filePath, command) {
-    const fileNameWithoutExtension = path.basename(filePath, path.extname(filePath))
-    return fileNameWithoutExtension.toLowerCase() === command.toLowerCase()
+  #matchesCommand(fileName, command) {
+  if (process.platform === 'win32') {
+    const fileNameWithoutExt = path.basename(fileName, path.extname(fileName))
+    return fileNameWithoutExt.toLowerCase() === command.toLowerCase()
   }
+
+  return fileName === command
+}
 
   #findExecutableInFiles(fileNames, command) {
     return fileNames.find(fileName => this.#matchesCommand(fileName, command))
