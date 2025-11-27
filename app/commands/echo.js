@@ -1,5 +1,5 @@
 const echoCommand = Object.freeze({
-  nama: 'echo',
+  name: 'echo',
   execute(args) {
     console.log(...args)
   }

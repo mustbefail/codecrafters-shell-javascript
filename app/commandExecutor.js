@@ -1,3 +1,5 @@
+const childProcess = require('child_process')
+
 class CommandExecutor {
   #registry
   #executableFinder
@@ -23,20 +25,21 @@ class CommandExecutor {
     return console.log(`${command}: command not found`)
   }
 
-  async execute(command, args) {
+  execute(command, args) {
     if(this.#isCommandRegistered(command)) {
       const handler = this.#getCommandHandler(command)
-      await handler.execute(args)
+      handler.execute(args)
     } else {
-      const execPath = await this.#getExecutablePath(command)
+      const execPath = this.#getExecutablePath(command)
+      console.log(args, 'args')
       return execPath ? this.#runExternal(execPath, args)
         : this.#notFoundHandler(command)
     }
   }
 
-  async #runExternal(execPath, args) {
+  #runExternal(execPath, args) {
     const childProcess = require('child_process')
-    childProcess.spawn(execPath, args, {stdio: 'inherit'})
+    return childProcess.spawnSync(execPath, args, {stdio: 'inherit'})
   }
 
 }

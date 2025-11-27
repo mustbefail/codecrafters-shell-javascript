@@ -1,41 +1,66 @@
-const { readdir, constants, access  } = require('fs/promises')
+const fs = require('fs')
+const path = require('path')
 
 class ExecutableFinder {
   #path
-  #currentOs
-  #pathSeparator = this.#currentOs === 'Windows_NT' ? ';' : ':'
+  #pathSeparator = path.delimiter
 
-  constructor(path, os = process.env.OS) {
-    this.#path = path
-    this.#currentOs = os
+  constructor(pathVariable) {
+    this.#path = pathVariable
   }
 
   #parsePath() {
     return this.#path.split(this.#pathSeparator)
   }
 
-  async #readDir(dirPath) {
-      try {
-        return await readdir(dirPath)
-      } catch (e) {
-        return null
-      }
+  #matchesCommand(filePath, command) {
+    const fileNameWithoutExtension = path.basename(filePath, path.extname(filePath))
+    return fileNameWithoutExtension.toLowerCase() === command.toLowerCase()
   }
 
-  async getCommandPath(command) {
-    const path = this.#parsePath()
-    for await (const dir of path) {
-      const files = await this.#readDir(dir)
-      if(!files) continue
+  #findExecutableInFiles(fileNames, command) {
+    return fileNames.find(fileName => this.#matchesCommand(fileName, command))
+  }
 
-      const executable = files.find((file) => file === command)
+  #readDir(dirPath) {
+    try {
+      return fs.readdirSync(dirPath)
+    } catch {
+      return null
+    }
+  }
 
+  #isAccessible(filePath) {
+    try {
+      fs.accessSync(filePath, fs.constants.X_OK)
+      return true
+    } catch {
       try {
-        await access(`${dir}/${executable}`, constants.X_OK)
-        return `${dir}/${executable}`
-      } catch (e) {
+        fs.accessSync(filePath, fs.constants.F_OK)
+        return true
+      } catch {
+        return false
       }
     }
+  }
+
+  #findInDirectory(dir, command) {
+    const files = this.#readDir(dir)
+    if (!files) return null
+
+    const executable = files.find(f => this.#matchesCommand(f, command))
+    if (!executable) return null
+
+    const fullPath = path.join(dir, executable)
+    return this.#isAccessible(fullPath) ? fullPath : null
+  }
+
+  getCommandPath(command) {
+    for (const dir of this.#parsePath()) {
+      const result = this.#findInDirectory(dir, command)
+      if (result) return result
+    }
+    return null
   }
 }
 

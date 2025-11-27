@@ -12,9 +12,9 @@ class Shell {
   start() {
     this.#rl.prompt()
 
-    this.#rl.on('line', async (input) => {
+    this.#rl.on('line', (input) => {
       const {command, args} = this.#parser.parse(input)
-      await this.#executor.execute(command, args)
+      this.#executor.execute(command, args)
       this.#rl.prompt()
     })
   }

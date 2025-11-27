@@ -12,7 +12,6 @@ const loadCommands = () => {
     const command = require(path.join(commandsDir, file))
     commands.push(command)
   }
-
   return commands
 }
 
