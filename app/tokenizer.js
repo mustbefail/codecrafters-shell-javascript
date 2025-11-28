@@ -65,6 +65,9 @@ class Tokenizer {
     ['DOUBLE_QUOTE', (char) => {
       if(char === '\"') {
         this.#state = 'NORMAL'
+      } else if(char === '\\') {
+        this.#currentToken += this.#peekNext()
+        this.#position += 1
       } else {
         this.#currentToken += char
       }
