@@ -4,6 +4,7 @@ class Tokenizer {
   #currentToken = ''
   #state = 'NORMAL'
   #tokens = []
+  #specialChars = ['\`', '\"', '\\', '\$']
 
   constructor(string) {
     this.#input = string
@@ -66,11 +67,13 @@ class Tokenizer {
       if(char === '\"') {
         this.#state = 'NORMAL'
       } else if(char === '\\') {
-        this.#currentToken += this.#peekNext()
-        this.#position += 1
-      } else {
-        this.#currentToken += char
+        const nextChar = this.#peekNext()
+        if(nextChar && this.#specialChars.includes(nextChar)) {
+          this.#currentToken += nextChar
+          this.#position += 1
+        }
       }
+      this.#currentToken += char
     }],
     ['ESCAPE', (char) => {
       this.#currentToken += char
