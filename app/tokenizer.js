@@ -49,6 +49,8 @@ class Tokenizer {
         this.#state = 'SINGLE_QUOTE'
       } else if(char === '\"') {
         this.#state = 'DOUBLE_QUOTE'
+      } else if(char === '\\') {
+        this.#state = 'ESCAPE'
       } else {
         this.#currentToken += char
       }
@@ -63,12 +65,13 @@ class Tokenizer {
     ['DOUBLE_QUOTE', (char) => {
       if(char === '\"') {
         this.#state = 'NORMAL'
-      } else if(char === '\'') {
-        this.#currentToken += '\''
       } else {
         this.#currentToken += char
       }
-
+    }],
+    ['ESCAPE', (char) => {
+      this.#currentToken += char
+      this.#state = 'NORMAL'
     }]
   ])
 
@@ -80,7 +83,7 @@ class Tokenizer {
   }
 
   #peekNext() {
-    return this.#input[ this.#position + 1]
+    return this.#input[this.#position + 1]
   }
 }
 
