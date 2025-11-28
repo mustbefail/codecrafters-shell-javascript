@@ -29,10 +29,6 @@ class Tokenizer {
     }
     this.#flushToken()
 
-    if (this.#state !== 'NORMAL') {
-      throw new Error(`Unterminated ${this.#state.toLowerCase()}`)
-    }
-
     return this.#tokens
   }
 
@@ -64,7 +60,16 @@ class Tokenizer {
         this.#currentToken += char
       }
     }],
-    ['DOUBLE_QUOTE', (char) => { /*TODO implement*/}]
+    ['DOUBLE_QUOTE', (char) => {
+      if(char === '\"') {
+        this.#state = 'NORMAL'
+      } else if(char === '\'') {
+        this.#currentToken += '\''
+      } else {
+        this.#currentToken += char
+      }
+
+    }]
   ])
 
   #flushToken() {
