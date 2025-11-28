@@ -71,9 +71,12 @@ class Tokenizer {
         if(nextChar && this.#specialChars.includes(nextChar)) {
           this.#currentToken += nextChar
           this.#position += 1
+        } else {
+          this.#currentToken += char
         }
+      } else {
+        this.#currentToken += char
       }
-      this.#currentToken += char
     }],
     ['ESCAPE', (char) => {
       this.#currentToken += char
