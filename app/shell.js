@@ -13,9 +13,19 @@ class Shell {
     this.#rl.prompt()
 
     this.#rl.on('line', (input) => {
-      const {command, args} = this.#parser.parse(input)
-      this.#executor.execute(command, args)
-      this.#rl.prompt()
+      try {
+        const {command, args} = this.#parser.parse(input)
+        return command ? this.#executor.execute(command, args) : this.#rl.prompt()
+      } catch (error) {
+        console.error(`Error executing command: ${error.message}`)
+      } finally {
+        this.#rl.prompt()
+      }
+    })
+
+    this.#rl.on('close', () => {
+      console.log('\nGoodbye!')
+      process.exit(0)
     })
   }
 }

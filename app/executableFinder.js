@@ -3,10 +3,11 @@ const path = require('path')
 
 class ExecutableFinder {
   #path
-  #pathSeparator = path.delimiter
+  #pathSeparator
 
-  constructor(pathVariable) {
+  constructor(pathVariable, pathSeparator) {
     this.#path = pathVariable
+    this.#pathSeparator = pathSeparator
   }
 
   #parsePath() {
@@ -51,6 +52,13 @@ class ExecutableFinder {
     if (!executable) return null
 
     const fullPath = path.join(dir, executable)
+    try {
+      const stats = fs.statSync(fullPath)
+      if (!stats.isFile()) return null
+    } catch {
+      return null
+    }
+
     return this.#isAccessible(fullPath) ? fullPath : null
   }
 

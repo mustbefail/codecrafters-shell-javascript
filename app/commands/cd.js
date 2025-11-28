@@ -1,12 +1,15 @@
-const cdCommand = Object.freeze({
-  name: 'cd',
-  execute([path]) {
+const CommandFactory = require('../CommandFactory')
+const cdFactory = (ctx) => ({execute([path]) {
+    const { chdir } = require('node:process')
+    const dirPath = path === '~' ? process.env.HOME : path
     try {
-      process.chdir(path)
+      chdir(dirPath)
     } catch {
-      console.log(`${this.name}: ${path}: No such file or directory`)
+      ctx.output(`${ctx.commandName}: ${dirPath}: No such file or directory`)
     }
   }
 })
 
-module.exports = cdCommand
+const cd = new CommandFactory('cd', cdFactory)
+
+module.exports = cd

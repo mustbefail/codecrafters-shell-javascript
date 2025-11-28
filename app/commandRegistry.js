@@ -1,5 +1,5 @@
 class CommandRegistry {
-  #dependencies = {}
+  #dependencies
   #commands = new Map()
 
   constructor(dependencies = {}) {
@@ -11,16 +11,14 @@ class CommandRegistry {
   }
 
   registerAll(commands) {
-    const ctx = {
-      ...this.#dependencies,
-      registry: this,
-    }
     for(const command of commands) {
-      if(command.factory) {
-        this.#register(command.name, command.factory(ctx))
-      } else {
-        this.#register(command.name, command)
+      const ctx = {
+        ...this.#dependencies,
+        output: console.log,
+        commandName: command.name,
+        registry: this,
       }
+      this.#register(command.name, command.factory(ctx))
     }
   }
 

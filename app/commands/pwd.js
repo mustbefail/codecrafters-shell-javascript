@@ -1,8 +1,9 @@
-const pwdCommand = Object.freeze({
-  name: 'pwd',
-  execute() {
-    console.log(process.cwd())
-  }
-})
+const CommandFactory = require('../CommandFactory')
 
-module.exports = pwdCommand
+const pwd = new CommandFactory('pwd', (ctx) => ({
+  execute() {
+    ctx.output(process.cwd())
+  }
+}))
+
+module.exports = pwd

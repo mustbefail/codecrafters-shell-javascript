@@ -1,9 +1,10 @@
-const echoCommand = Object.freeze({
-  name: 'echo',
-  execute(args) {
-    console.log(...args)
-  }
-})
+const CommandFactory = require('../CommandFactory')
 
-module.exports = echoCommand
+const echo = new CommandFactory('echo', (ctx) => ({
+  execute(args) {
+    ctx.output(...args)
+  }
+}))
+
+module.exports = echo
 
