@@ -6,13 +6,11 @@ const Shell = require('./shell')
 const CommandRegistry = require('./commandRegistry')
 const CommandExecutor = require('./commandExecutor')
 const ExecutableFinder = require('./executableFinder')
-const InputParser = require('./inputParser')
 const { loadCommands } = require('./commands')
 const SystemProcessRunner = require('./systemProcessRunner')
 const {InternalStrategy, SystemStrategy} = require('./executeStrategies')
 
 // Initialize dependencies
-const inputParser = new InputParser()
 const executableFinder = new ExecutableFinder(process.env.PATH, delimiter)
 const systemProcessRunner = new SystemProcessRunner(spawnSync)
 
@@ -35,6 +33,6 @@ const rl = readline.createInterface({
   prompt: '$ ',
 })
 
-const shell = new Shell(rl, inputParser, executor)
+const shell = new Shell(rl, executor)
 
 shell.start()

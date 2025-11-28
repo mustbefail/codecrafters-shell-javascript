@@ -1,11 +1,11 @@
+const Tokenizer = require('./tokenizer')
+
 class Shell {
   #rl
-  #parser
   #executor
 
-  constructor(rl, parser, executor) {
+  constructor(rl, executor) {
     this.#rl = rl
-    this.#parser = parser
     this.#executor = executor
   }
 
@@ -14,7 +14,9 @@ class Shell {
 
     this.#rl.on('line', (input) => {
       try {
-        const {command, args} = this.#parser.parse(input)
+        const tokenizer = new Tokenizer(input.trim())
+        const {command, args} = tokenizer.parseInputString()
+
         return command ? this.#executor.execute(command, args) : this.#rl.prompt()
       } catch (error) {
         console.error(`Error executing command: ${error.message}`)
